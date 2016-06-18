@@ -27,8 +27,8 @@ object Cli {
     }
   }
 
-  def exeGit(path: String, cmds: Seq[String]): Boolean = {
-    val p = sys.process.Process(cmds, new java.io.File(path)).run()
-    p.exitValue() == 0
-  }
+  //def exeGit(path: String, cmds: Seq[String]): Boolean = {
+  //  val p = sys.process.Process(cmds, new java.io.File(path)).run()
+  //  p.exitValue() == 0
+  //}
 }

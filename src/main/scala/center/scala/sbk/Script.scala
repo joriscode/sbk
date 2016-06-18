@@ -27,7 +27,7 @@ object Script {
       * @param source None if local else Some(url)
       * @param main main object to be called. Ex: Main.main(args)
       */
-    case class RegisteredFile(path: FsUrl, sha1: String, source: Option[Pool], sourcePath: Option[String], main: String) {
+    case class RegisteredFile(path: FsUrl, sha1: String, source: Option[Pool], sourcePath: Option[String], main: String, classpath: String) {
       /**
         * Checks the sha1 sum of this file.
         *
@@ -55,10 +55,22 @@ object Script {
     def pathToClassesDir(alias: String): String = Helper.fsToPath(fsToClassesDir(alias))
     def fsToClassesDir(alias: String): FsUrl = classesDir / alias
 
-    def updateHash(alias: String) = {
+    private def hash(path: FsUrl): String = path.slurp[Char].sha1.hex
+
+    /**
+      * Updates the hash, the classpath of the script
+      * @param alias alias of the script
+      */
+    def updateMetadata(alias: String, classpath: String) = {
       val data = read()
-      val newData = data - alias
-      write(newData)
+      data.get(alias) match {
+        case None =>
+          throw new Exception(s"Could not update the metadata of the script $alias when recompiling")
+        case Some(rf) =>
+          val tmpData = data - alias
+          val newData = data + (alias -> RegisteredFile(rf.path, hash(rf.path), rf.source, rf.sourcePath, rf.main, classpath))
+          write(newData)
+      }
     }
 
     /**
@@ -66,8 +78,9 @@ object Script {
       *
       * @param alias alias of the script
       * @param script path to the script
+      * @return the classpath
       */
-    def compile(alias: String, script: FsUrl) = {
+    def compile(alias: String, script: FsUrl): String = {
       val dir = fsToClassesDir(alias)
       if (! dir.exists) dir.mkdir()
       if (! dir.exists) throw new Exception(s"Cannot create $dir to store the compiled classes")
@@ -76,21 +89,22 @@ object Script {
       val classPath = Coursier.cp(Script.extractDependencies(script))
 
       Cli.exe(Helper.fsToPath(dir), Seq("scalac", "-d", classesDest, "-cp", classPath, Helper.fsToPath(script)), Nil)
+      classPath
     }
 
     // TODO Caution if it fails, we delete the working version
     def reCompile(alias: String, script: FsUrl) = {
       val classDir = fsToClassesDir(alias)
       Helper.deleteDir(classDir)
-      compile(alias, script)
-      updateHash(alias)
+      val classpath = compile(alias, script)
+      updateMetadata(alias, classpath)
     }
 
     def updateMain(alias: String, rf: RegisteredFile, main: String) = {
       val data = read()
       val rf = data.getOrElse(alias, throw new Exception(s"The script alias $alias does not exist"))
       val tempData = data - alias
-      val newData = tempData ++ Map(alias -> RegisteredFile(rf.path, rf.sha1, rf.source, rf.sourcePath, main))
+      val newData = tempData ++ Map(alias -> RegisteredFile(rf.path, rf.sha1, rf.source, rf.sourcePath, main, rf.classpath))
       write(newData)
     }
 
@@ -131,9 +145,9 @@ object Script {
 
       } else {
         Prompt.info(s"Compile script $path")
-        compile(alias, path)
+        val classpath = compile(alias, path)
         val data = read()
-        val value = RegisteredFile(path, path.slurp[Char].sha1.hex, pool, srcPath, main)
+        val value = RegisteredFile(path, hash(path), pool, srcPath, main, classpath)
         val updatedListing = data ++ Map(alias -> value)
         write(updatedListing)
       }
