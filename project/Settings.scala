@@ -39,12 +39,12 @@ object Settings {
   /** Dependencies only used by the JVM project */
   val dependencies = Def.setting(Seq(
       "com.lihaoyi" %% "fastparse" % versions.fastParse,
-      "com.propensive" %% "rapture-fs" % versions.rapture,
-      "com.propensive" %% "rapture-html" % versions.rapture,
-      "com.propensive" %% "rapture-http-jetty" % versions.rapture,
-      "com.propensive" %% "rapture-http-json" % versions.rapture,
-      "com.propensive" %% "rapture-json-jawn" % versions.rapture,
-      "com.propensive" %% "rapture-net" % versions.rapture,
+      "com.propensive" %% "rapture-fs" % versions.rapture excludeAll( ExclusionRule(organization = "org.eclipse.jetty") ),
+      "com.propensive" %% "rapture-html" % versions.rapture excludeAll( ExclusionRule(organization = "org.eclipse.jetty") ),
+      "com.propensive" %% "rapture-http-jetty" % versions.rapture excludeAll( ExclusionRule(organization = "org.eclipse.jetty") ),
+      "com.propensive" %% "rapture-http-json" % versions.rapture excludeAll( ExclusionRule(organization = "org.eclipse.jetty") ),
+      "com.propensive" %% "rapture-json-jawn" % versions.rapture excludeAll( ExclusionRule(organization = "org.eclipse.jetty") ),
+      "com.propensive" %% "rapture-net" % versions.rapture excludeAll( ExclusionRule(organization = "org.eclipse.jetty") ),
       "com.roundeights" %% "hasher" % versions.hasher,
       "io.get-coursier" %% "coursier" % versions.coursier,
       "io.get-coursier" %% "coursier-cache" % versions.coursierCache,

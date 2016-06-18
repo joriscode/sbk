@@ -15,3 +15,5 @@ lazy val script = (project in file("."))
     resolvers += "RoundEights" at "http://maven.spikemark.net/roundeights",
     libraryDependencies ++= Settings.dependencies.value
   )
+
+assemblyJarName in assembly := "sbk.jar"
