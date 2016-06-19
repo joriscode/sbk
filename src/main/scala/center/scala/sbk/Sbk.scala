@@ -11,7 +11,7 @@ import jsonBackends.jawn._
 object Sbk {
   val sbkDir = File.homeDir / ".sbk"
   val toolName = "sbk"
-  val toolVersion = "0.2.2"
+  val toolVersion = "1.0.0"
 
   def checkAccessToFiles(): Unit = {
     if (!sbkDir.exists) sbkDir.mkdir()

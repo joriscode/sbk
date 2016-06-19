@@ -134,7 +134,7 @@ case class ExecRegistered(alias: String, args: List[String]) extends Command {
         if (rf.checkSha1()) {
           val deps = Script.extractDependencies(rf.path)
           val dir = Script.Listing.pathToClassesDir(alias)
-          val classPath = Coursier.cp(deps) + ":" + dir
+          val classPath = rf.classpath + ":" + dir
 
           Prompt.info(s"Execute the script alias $alias")
           Cli.exe(dir, Seq("scala", "-cp", classPath, rf.main), args)
