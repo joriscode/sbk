@@ -186,7 +186,7 @@ object Github {
       * @param fs the path to the script to be uploaded.
       */
     def upload(fs: FsUrl): Unit = {
-      /**
+      /*
         * A convenient class for gathering and converting to Json the content to be pushed.
         */
       case class PushFile(message: String, content: String)
@@ -211,7 +211,7 @@ object Github {
       * @param fs the location of the file
       */
     def update(fs: FsUrl): Unit = {
-      /**
+      /*
         * A convenient class for gathering and converting to Json the content to be pushed.
         */
       case class UpdateFile(message: String, content: String, sha: String)

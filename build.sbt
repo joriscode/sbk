@@ -19,3 +19,5 @@ lazy val script = (project in file("."))
 assemblyJarName in assembly := "sbk.jar"
 
 enablePlugins(JavaAppPackaging)
+
+mainClass in Compile := Some("center.scala.sbk.Main")

@@ -17,7 +17,7 @@ object Scaladex {
       * @return the corresponding projects
       */
     private def find(limit: Option[Int]): List[Project] = {
-      /**
+      /*
         * Queries Scaladex with the find API method
         *
         * @param pageIndex the index of the page [0, total - 1],
@@ -35,7 +35,7 @@ object Scaladex {
         json.as[FindResult]
       }
 
-      /**
+      /*
         * Recursively collects all the pages
         *
         * @param curPageIndex the current page index

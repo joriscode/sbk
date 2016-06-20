@@ -210,7 +210,7 @@ object Script {
 
     val dependency = P(space.rep ~ "library" ~ space.rep ~ "\"" ~ anyString.! ~ "\"" ~ space ~ "%" ~ "%".!.? ~ space ~ "\"" ~ anyString.! ~ "\"" ~ " % " ~ "\"" ~ anyString.! ~ "\"" ~ space.rep ~ "\n")
 
-    /** Intermediate Representation of Dependency that is used to resolve artifact => artifactId
+    /* Intermediate Representation of Dependency that is used to resolve artifact => artifactId
       * Define the scalaVersion if the dependency key doesn't (see %%)
       */
     case class IRDependency(groupId: String, artifact: String, version: String, scalaVersionFlag: Boolean)
