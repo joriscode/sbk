@@ -363,6 +363,24 @@ case class PoolUpload(scriptAlias: String, poolAlias: Option[String] = None) ext
   }
 }
 
+case class PoolUpdate(scriptAlias: String, poolAlias: Option[String] = None) extends Command {
+  override def exec(): Unit = {
+    if (Script.Listing.exists(scriptAlias)) {
+      val fs = Script.Listing.getPath(scriptAlias).get
+
+      val pool = poolAlias match {
+        case Some(p) => Github.Listing.get(p).getOrElse(throw new Exception(s"The pool alias $poolAlias does not exist")) // throw is not consistent with the logic of the function
+        case None => Github.getUserPool
+      }
+      pool.update(fs)
+      Prompt.info(s"Successfully uploaded $scriptAlias to $poolAlias") // TOTO replace with name and could query Github to verify
+
+    } else {
+      Prompt.error(s"The script alias $scriptAlias does not exist")
+    }
+  }
+}
+
 // TODO pb Main hardcoded, could be defined in header
 case class PoolDownload(name: String, poolAlias: String, scriptAlias: Option[String]) extends Command {
   override def exec(): Unit = {

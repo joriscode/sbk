@@ -69,6 +69,7 @@ object Scallop {
       val remove = opt[PoolRemove](descr = "Unregister a pool: -d alias")
       val changeToken = opt[PoolToken](descr = "Change the oAuth2 token of the pool: -c alias newToken")
       val upload = opt[PoolUpload](descr = "Upload a registered script to the user's pool: -u scriptAlias poolAlias")
+      val update = opt[PoolUpdate](descr = "Update a registered script to the user's pool: -u scriptAlias poolAlias")
       val download = opt[PoolDownload](descr = "Download a script from a pool: -d poolAlias file")
       requireOne(add, remove, changeToken, upload, download)
       mutuallyExclusive(add, remove, changeToken, upload, download)
@@ -301,6 +302,20 @@ object Scallop {
     val argType = org.rogach.scallop.ArgType.LIST
   }
 
+  implicit val poolUpdateConverter = new ValueConverter[PoolUpdate] {
+    def parse(s: List[(String, List[String])]): Either[String, Option[PoolUpdate]] = {
+      s match {
+        case (_, alias :: Nil) :: Nil => Right(Some(PoolUpdate(alias, None)))
+        case (_, alias :: poolAlias :: Nil) :: Nil => Right(Some(PoolUpdate(alias, Some(poolAlias))))
+        case Nil => Right(None)
+        case _ => Left("pool update parser error")
+      }
+    }
+
+    val tag = scala.reflect.runtime.universe.typeTag[PoolUpdate]
+    val argType = org.rogach.scallop.ArgType.LIST
+  }
+
   implicit val poolDownloadConverter = new ValueConverter[PoolDownload] {
     def parse(s: List[(String, List[String])]): Either[String, Option[PoolDownload]] = {
       s match {
@@ -436,6 +451,9 @@ object Scallop {
 
           } else if (conf.pool.upload.supplied) {
             conf.pool.upload.get.get
+
+          } else if (conf.pool.update.supplied) {
+            conf.pool.update.get.get
 
           } else {
             Error("This pool subcommand does not exist. See --help")
