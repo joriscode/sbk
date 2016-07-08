@@ -39,53 +39,6 @@ case class Search(lib: InputLibrary, cache: Boolean, last: Boolean, url: Boolean
   }
 }
 
-/*
-  override def simpleUsage(): String = "search <partial library name> or <key dependency like>"
-  override def complexUsage(): String =
-    """Allows to do a lousy search for a library on Scaladex
-      |Usage: search <OPTIONS> <LIBRARY>
-      |where <OPTIONS>: -c --> local search
-      |and <LIBRARY>:
-      |<partial library name> // example: play-json
-      |<key dependency like> // example: "typesafe" % "play-json" % ""
-      |<key dependency like> can be:
-      |"partial group" % "partial artifact" % "partial version"
-      |"partial group" %% "partial artifact" % "partial version"
-      |"partial group" % "partial artifact"
-      |"partial group" %% "partial artifact"
-    """.stripMargin
-    */
-
-// TODO keep Install?
-/*
-case class Install(dep: Dependency) extends Command {
-  def exec(): Unit = dep.fetch()
-}
-
-// TODO print warning if it seems to be not an exact dependency
-object Install extends CommandCompanion {
-  override def create(args: List[String], options: Set[Char]): Command = {
-    // TODO fetch only accept exact keyDependency
-    //val lib = TempLib.fromString(args).searchAndSelect()
-    val x = InputLibrary.fromString(args)
-    // TODO define one way to convert a InputLibrary into Dependency
-    val dep = Dependency(x.group.get, x.artifact.get, x.version.get) // TODO incorrect
-    //Install(dep)
-    Help()
-  }
-
-  override def simpleUsage(): String = "install <exact key dependency>"
-
-  override def complexUsage(): String =
-  // TODO allows %%?
-    """Allows to fetch the jar of a library from Maven
-      |Usage: install <exact key dependency>
-      |where <exact key dependency>:
-      | "groupId" % "artifactId" % "version" // ex: "com.typesafe.play" % "play-json_2.11" % "2.5.1"
-    """.stripMargin
-}
-*/
-
 // fsToPath is not symmetric with pathTofs
 case class ExecUnregistered(script: String, args: List[String]) extends Command {
   override def exec(): Unit = {
@@ -98,7 +51,7 @@ case class ExecUnregistered(script: String, args: List[String]) extends Command 
             val deps = Script.extractDependencies(fs)
             deps.foreach(_.existOrFetch())
             val classPath = Coursier.cp(deps)
-            Prompt.info(s"Executes the script ${Helper.fsToPath(fs)}")
+            //Prompt.info(s"Executes the script ${Helper.fsToPath(fs)}")
 
             Cli.exe(Helper.fsToPath(Helper.fsParent(fs)), Seq("scala", "-cp", classPath, Helper.fsToPath(fs)), args)
 
@@ -114,18 +67,6 @@ case class ExecUnregistered(script: String, args: List[String]) extends Command 
   }
 }
 
-/*
-  // TODO see caution
-  override def complexUsage(): String =
-    """Allows to run a script
-      |Caution: queries Scaladex or does local search => do not accept arbitrary library that could not be found online or locally
-      |Usage: exec <file>
-      |where <file> is the absolute or relative path to the script
-    """.stripMargin
-}
-
-*/
-
 case class ExecRegistered(alias: String, args: List[String]) extends Command {
   override def exec(): Unit = Script.Listing.get(alias) match {
     case None => Prompt.error(s"The script alias $alias does not exist")
@@ -136,7 +77,7 @@ case class ExecRegistered(alias: String, args: List[String]) extends Command {
           val dir = Script.Listing.pathToClassesDir(alias)
           val classPath = rf.classpath + ":" + dir
 
-          Prompt.info(s"Execute the script alias $alias")
+          //Prompt.info(s"Execute the script alias $alias")
           Cli.exe(dir, Seq("scala", "-cp", classPath, rf.main), args)
 
         } else {
