@@ -333,6 +333,10 @@ case class PoolRemove(alias: String) extends Command {
   }
 }
 
+case class PoolList() extends Command {
+  override def exec(): Unit = Github.Listing.list()
+}
+
 case class PoolToken(alias: String, token: String) extends Command {
   override def exec(): Unit = Github.Listing.get(alias) match {
     case Some(pool) =>
@@ -462,14 +466,15 @@ case class H(command: Option[String] = None) extends Command {
         |    -r, --resolve  <path-to-script>    Resolve the dependencies declared in a script
         |    -t, --template <destination>       Create a template
         |
-        |Subcommand: pool - Registration of Github pools
+        |Subcommand: pool - Registration of Github repositories (pools)
         |  Usage:
         |    ${Sbk.toolName} pool [option]
         |
         |  Options:
         |    -a, --add  <alias> <org> <repo> <token>*                   Register a pool
-        |    -c, --change-token  <poolAlias> <token>                    Change the oAuth2 token of the pool
         |    -r, --remove  <poolAlias>                                  Unregister a pool
+        |    -l, --list                                                 List pools
+        |    -c, --change-token  <poolAlias> <token>                    Change the oAuth2 token of the pool
         |    -d, --download  <poolAlias> <path-to-file-on-the-repo>     Download a script from a pool
         |    -u, --upload  <scriptAlias> <poolAlias>                    Upload a registered script to the user's pool
        """.stripMargin

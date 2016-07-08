@@ -67,6 +67,7 @@ object Scallop {
       descr("Registration of Github pools")
       val add = opt[PoolAdd](descr = "Register a pool: -a alias org repo token (optional)")
       val remove = opt[PoolRemove](descr = "Unregister a pool: -d alias")
+      val list = opt[Boolean](descr = "List the pools: -l")
       val changeToken = opt[PoolToken](descr = "Change the oAuth2 token of the pool: -c alias newToken")
       val upload = opt[PoolUpload](descr = "Upload a registered script to the user's pool: -u scriptAlias poolAlias")
       val update = opt[PoolUpdate](descr = "Update a registered script to the user's pool: -u scriptAlias poolAlias")
@@ -442,6 +443,9 @@ object Scallop {
 
           } else if (conf.pool.remove.supplied) {
             conf.pool.remove.get.get
+
+          } else if (conf.pool.list.supplied) {
+            PoolList()
 
           } else if (conf.pool.changeToken.supplied) {
             conf.pool.changeToken.get.get

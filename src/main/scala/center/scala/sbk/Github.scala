@@ -288,6 +288,19 @@ object Github {
     if (! listing.exists) "{}".copyTo(listing)
     if (! listing.exists) throw new Exception(s"$listing cannot be created")
 
+    def list() = {
+      val data = read()
+
+      if (data.isEmpty) {
+        Prompt.info("No pool defined")
+
+      } else {
+        data.foreach{ source =>
+          Prompt.display(source._1 + "--> " + source._2)
+        }
+      }
+    }
+
     def get(alias: String) = read().get(alias)
     def exists(alias: String): Boolean = read().get(alias).isDefined
     def add(alias: String, pool: Pool): Unit = write(read() + (alias -> pool))
