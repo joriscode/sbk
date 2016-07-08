@@ -11,7 +11,7 @@ object Scaladex {
     case class FindResult(_1: Pagination, _2: List[Project])
 
     /**
-      * Queries all projects on Scaldex corresponding to the Request
+      * Queries all projects on Scaladex corresponding to the Request
       *
       * @param limit NOT IMPLEMENTED, watchdog on the maximum of projects to collect
       * @return the corresponding projects

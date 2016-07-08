@@ -63,13 +63,7 @@ case class InputLibrary(group: Option[String], artifact: String, version: Option
 
     // TODO query scaladex if accessible
 
-    version match {
-      case Some(v) =>
-        Request(group, artifact).search(version)
-      case None =>
-        //Request(group, artifact).latest()
-        Request(group, artifact).search(None)
-    }
+    Request(group, artifact).search(version)
   }
 
   // TODO take care of the order
