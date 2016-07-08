@@ -23,3 +23,4 @@ enablePlugins(JavaAppPackaging)
 mainClass in Compile := Some("center.scala.sbk.Main")
 
 fork := true
+outputStrategy := Some(StdoutOutput)
