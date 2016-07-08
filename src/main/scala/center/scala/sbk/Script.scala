@@ -271,7 +271,7 @@ object Script {
       }
     }
 
-    val libraries = libs.map{x => "library " + x}
+    val libraries = libs.map("library " + _)
 
     val header =
       s"""|/* sbk
@@ -289,8 +289,8 @@ object Script {
          |}
          |""".stripMargin
 
-    Prompt.info(s"Create template at $dest")
-
     (header + dummyBody).copyTo(dest)
+    Prompt.info(s"Template created at $dest")
+    Prompt.info("To declare a dependency, add in the header of the script: library <dependency key>")
   }
 }
