@@ -53,7 +53,8 @@ case class ExecUnregistered(script: String, args: List[String]) extends Command 
             val classPath = Coursier.cp(deps)
             //Prompt.info(s"Executes the script ${Helper.fsToPath(fs)}")
 
-            Cli.exe(Helper.fsToPath(Helper.fsParent(fs)), Seq("scala", "-cp", classPath, Helper.fsToPath(fs)), args)
+            val execDir = "/" + Helper.getCurrentDirectory
+            Cli.exe(execDir, Seq("scala", "-cp", classPath, Helper.fsToPath(fs)), args)
 
           } else {
             Prompt.error(s"The script $fs is not readable")
@@ -78,7 +79,7 @@ case class ExecRegistered(alias: String, args: List[String]) extends Command {
           val classPath = rf.classpath + ":" + dir
 
           //Prompt.info(s"Execute the script alias $alias")
-          Cli.exe(dir, Seq("scala", "-cp", classPath, rf.main), args)
+          Cli.exe("/" + Helper.getCurrentDirectory, Seq("scala", "-cp", classPath, rf.main), args)
 
         } else {
           Script.Listing.reCompile(alias, rf.path)
