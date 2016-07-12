@@ -1,7 +1,5 @@
 {
-  "launcher": {
     "command": "sbt assembly",
     "script": "java -jar ~/.spl/projects/joriscode/sbk/target/scala-2.11/sbk.jar",
     "name": "sbk-exp"
-  }
 }
