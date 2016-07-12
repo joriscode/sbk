@@ -198,6 +198,12 @@ object Github {
       if (this.exists(fs.filename)) throw new Exception(s"Could not upload ${fs.filename} seems to already exists on $this")
 
       val httpUrl: HttpUrl = url.httpUrl / ("contents/" + fs.filename)
+
+      val token = this.token match {
+        case Some(tok) => tok
+        case None => throw new Exception(s"The pool $this has no token defined")
+      }
+      val oAuth2 = Map("Authorization" -> ("token " + token)) // TODO decide if token is defined in user.token or per pool
       val status: HttpResponse = httpUrl.httpPut(Json(post), oAuth2)
 
       if (status.status  == 409) Prompt.error("Github returns status 409 Conflict - This file might already exist")
@@ -225,6 +231,11 @@ object Github {
       val content = encoder64(fs.slurp[Char])
       val post = UpdateFile(s"Push update of script ${fs.filename}", content, sha)
 
+      val token = this.token match {
+        case Some(tok) => tok
+        case None => throw new Exception(s"The pool $this has no token defined")
+      }
+      val oAuth2 = Map("Authorization" -> ("token " + token)) // TODO decide if token is defined in user.token or per pool
       val status: HttpResponse = httpUrl.httpPut(Json(post), oAuth2)
       if (status.status != 200) throw new Exception(s"Could not update $fs. HttpPut status ${status.status}")
     }
